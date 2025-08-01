@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,300;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+body {
+    background-color: #fff;
+}
+
+.header {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    max-width: 1280px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    margin-inline: auto;
+}
+
+.nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+    justify-content: center;
+}
+.nav-list li {
+    flex: 0 0 200px ;
+    margin-top: 1rem;
+}
+
+.nav-list a {
+    display: block;
+    color: #333;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.nav-list a:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+    padding: 20px 50px;
+    border: 1px solid #007bff;
+    border-radius: 40px;
+}
+
+\* Hero Section Styles \*/
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-conteudo {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+    padding: 0 24px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.hero-conteudo h1 {
+    font-size: 4rem;
+}
+
+.hero-conteudo h2 {
+    font-size: 3rem;
+}
+
+.hero-conteudo p {
+    font-size: 1.4rem;
+    font-style: italic;
+}
+
+.hero-conteudo .btn {
+    display: block; 
+    text-align: center;
+    width: 200px;
+    margin-top: 30px;
+    color: #333;
+    font-weight: 700;
+    background-color: greenyellow;
+    padding: 20px 0;
+    border-radius: 40px;
+    border: 2px solid #333;
+}
