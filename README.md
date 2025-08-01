@@ -28,23 +28,6 @@ O projeto contém:
 
 ---
 
-## Estrutura do Projeto
-
-/
-├── index.html # Página principal (Home)
-├── css/
-│ └── style.css # Estilos principais
-├── js/
-│ └── script.js # Scripts JS (atualmente vazio)
-└── img/
-└── sedepetrobras.png # Imagem utilizada na seção About Us
-
-yaml
-Copy
-Edit
-
----
-
 ## Como Rodar o Projeto Localmente
 
 1. Clone o repositório:
