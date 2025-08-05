@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Era da Flexibilização - Análise Crítica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --dark-bg: #0a0a0a;
+            --light-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            top: 1rem;
+            background: rgba(10, 10, 10, 0.9);
+            border-radius: 25px;
+            padding: 0.7rem 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 87, 108, 0.3) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary-gradient);
+        }
+
+        /* Informative Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .info-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .info-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Cartoons/Infographics Section */
+        .cartoons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .cartoon-card {
+            background: var(--light-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cartoon-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .cartoon-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .cartoon-card-content {
+            padding: 1.5rem;
+        }
+
+        .cartoon-card-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cartoon-card-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Data/Charts Section */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .chart-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .chart-card h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .chart-placeholder {
+            background: var(--light-bg);
+            border-radius: 10px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 40px;
+            background: var(--primary-gradient);
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar:nth-child(1) {
+            left: 20%;
+            height: 60%;
+            background: linear-gradient(to top, #667eea, #764ba2);
+        }
+
+        .chart-bar:nth-child(2) {
+            left: 35%;
+            height: 80%;
+            background: linear-gradient(to top, #f093fb, #f5576c);
+        }
+
+        .chart-bar:nth-child(3) {
+            left: 50%;
+            height: 45%;
+            background: linear-gradient(to top, #4facfe, #00f2fe);
+        }
+
+        .chart-bar:nth-child(4) {
+            left: 65%;
+            height: 70%;
+            background: linear-gradient(to top, #fa709a, #fee140);
+        }
+
+        .chart-bar:nth-child(5) {
+            left: 80%;
+            height: 90%;
+            background: linear-gradient(to top, #30cfd0, #330867);
+        }
+
+        .chart-bar:hover {
+            transform: scaleY(1.1);
+            filter: brightness(1.2);
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Quotes Section */
+        .quotes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .quote-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 4rem;
+            color: var(--primary-gradient);
+            opacity: 0.5;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .quote-text {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .quote-author {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--light-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--text-primary);
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+
+            .info-grid,
+            .cartoons-container,
+            .charts-container,
+            .quotes-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+<body> <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <ul class="nav-links">
+            <li><a href="#work">Work</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#playground">Playground</a></li>
+            <li><a href="#resource">Resource</a></li>
+        </ul> <a href="#" class="cta-button">Flexibilização</a>
+    </nav>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>A Era da Flexibilização</h1>
+            <p>Uma análise crítica dos modelos produtivos contemporâneos, da
+                doutrina neoliberal e da precarização do
+                trabalho na sociedade atual</p>
+        </div>
+    </section>
+
+    <!-- Informative Section -->
+    <section id="about" class="fade-in">
+        <h2 class="section-title">Temas Centrais</h2>
+        <div class="info-grid">
+            <div class="info-card fade-in">
+                <i class="fas fa-industry"></i>
+                <h3>Modelos Produtivos no Capitalismo Contemporâneo</h3>
+                <p>A transformação dos modelos produtivos após a crise
+                    fordista, com a ascensão da produção flexível,
+                    just-in-time e a globalização das cadeias produtivas. A
+                    reorganização do trabalho sob a lógica do
+                    capital financeiro e a busca por maximização de
+                    lucros.</p>
+            </div>
+            <div class="info-card fade-in">
+                <i class="fas fa-chart-line"></i>
+                <h3>A Doutrina Neoliberal e suas consequências</h3>
+                <p>O neoliberalismo como ideologia dominante desde os anos
+                    1980, promovendo a desregulação,
+                    privatizações e a redução do papel do Estado. Suas
+                    consequências sociais: aumento da desigualdade,
+                    precarização e erosão dos direitos sociais
+                    conquistados.</p>
+            </div>
+            <div class="info-card fade-in">
+                <i class="fas fa-users-slash"></i>
+                <h3>A Desregulação do Trabalho e a precarização</h3>
+                <p>A flexibilização das leis trabalhistas como instrumento
+                    de acumulação capitalista. O fenômeno da
+                    uberização, trabalho intermitente, terceirização e as
+                    novas formas de exploração que fragilizam a
+                    classe trabalhadora.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cartoons/Infographics Section -->
+    <section id="playground" class="fade-in">
+        <h2 class="section-title">Crítica Visual</h2>
+        <div class="cartoons-container">
+            <div class="cartoon-card fade-in">
+                <img src="https://picsum.photos/seed/neoliberal1/400/250" alt="Crítica ao Neoliberalismo">
+                <div class="cartoon-card-content">
+                    <h4>O Pesadelo Neoliberal</h4>
+                    <p>Representação visual da lógica de mercado que tudo
+                        subjuga, transformando direitos em mercadorias
+                        e cidadãos em consumidores.</p>
+                </div>
+            </div>
+            <div class="cartoon-card fade-in">
+                <img src="https://picsum.photos/seed/precarization1/400/250" alt="Precarização do Trabalo">
+                <div class="cartoon-card-content">
+                    <h4>A Gaiola dourada</h4>
+                    <p>A ilusão da liberdade no trabalho precário, onde a
+                        flexibilidade mascara a ausência de garantias e a
+                        exploração disfarçada.</p>
+                </div>
+            </div>
+            <div class="cartoon-card fade-in">
+                <img src="https://picsum.photos/seed/capitalism1/400/250" alt="Capitalismo Contemporâneo">
+                <div class="cartoon-card-content">
+                    <h4>O Monstro Financeiro</h4>
+                    <p>O capital financeiro como força dominante, devorando
+                        a economia real e submetendo o trabalho à sua lógica
+                        especulativa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Data/Charts Section -->
+    <section id="resource" class="fade-in">
+        <h2 class="section-title">Dados sobre Precarização</h2>
+        <div class="charts-container">
+            <div class="chart-card fade-in">
+                <h3>Crescimento do Trabalho Precário (1990-2023)</h3>
+                <div class="chart-placeholder">
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                </div>
+                <div class="chart-labels">
+                    <span>1990</span>
+                    <span>2000</span>
+                    <span>2010</span>
+                    <span>2020</span>
+                    <span>2023</span>
+                </div>
+            </div>
+            <div class="chart-card fade-in">
+                <h3>Impacto na Renda Média dos Trabalhadores</h3>
+                <div class="chart-placeholder">
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                    <div class="chart-bar"></div>
+                </div>
+                <div class="chart-labels">
+                    <span>CLT</span>
+                    <span>PJ</span>
+                    <span>Uber</span>
+                    <span>Inter.</span>
+                    <span>Bico</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quotes Section -->
+    <section class="fade-in">
+        <h2 class="section-title">Vozes Críticas</h2>
+        <div class="quotes-container">
+            <div class="quote-card fade-in">
+                <p class="quote-text">"O neoliberalismo não é apenas uma teoria econômica, é um projeto político que
+                    visa submeter todas as esferas da vida à lógica do mercado."</p>
+                <p class="quote-author">— David Harvey</p>
+            </div>
+            <div class="quote-card fade-in">
+                <p class="quote-text">"A precarização não é um fenômeno natural, mas uma escolha política que beneficia
+                    poucos em detrimento da maioria trabalhadora."</p>
+                <p class="quote-author">— Ricardo Antunes</p>
+            </div>
+            <div class="quote-card fade-in">
+                <p class="quote-text">"O capitalismo contemporâneo transformou o trabalhador em seu próprio empresário,
+                    sem os benefícios e com todos os riscos."</p>
+                <p class="quote-author">— Guy Standing</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p>&copy; 2023 A Era da Flexibilização. Análise Crítica do
+            Capitalismo Contemporâneo.</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Animate chart bars on scroll
+        const chartObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.chart-bar');
+                    bars.forEach((bar, index) => {
+                        setTimeout(() => {
+                            bar.style.animation = 'fadeInUp 0.6s ease forwards';
+                        }, index * 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.chart-placeholder').forEach(el => {
+            chartObserver.observe(el);
+        });
+
+        // Add hover effect to info cards
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.background = 'rgba(255, 255, 255, 0.15)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.background = 'var(--glass-bg)';
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+    </script>
+</body>
+
+</html>
