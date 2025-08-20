@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Era da Flexibilização - Análise Crítica</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -112,6 +113,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative; /* garante que o ::before fique ancorado ao .hero */
+            overflow: hidden;   /* evita vazamento do fundo em telas grandes */
+            width: 100%;        /* ocupar 100% da largura */
+            max-width: none;    /* remove limite de 1200px herdado de section */
+            margin: 0;          /* remove centralização com margin auto do section */
+            padding-left: 0;    /* full-bleed horizontal */
+            padding-right: 0;   /* full-bleed horizontal */
         }
 
         .hero::before {
@@ -123,9 +131,16 @@
             bottom: 0;
             background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(245, 87, 108, 0.3) 0%, transparent 50%);
-            z-index: -1;
+            z-index: 0; /* estava -1; pode sumir atrás do body em telas grandes */
+            will-change: transform;
+            transform: translateY(var(--parallax-y, 0px));
         }
 
+        /* conteúdo acima do fundo */
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
         .hero-content h1 {
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 800;
@@ -494,6 +509,7 @@
         <ul class="nav-links">
             <li><a href="#work">Work</a></li>
             <li><a href="#about">About</a></li>
+            <li><a href="#modelo">Modelo</a></li>
             <li><a href="#playground">Playground</a></li>
             <li><a href="#resource">Resource</a></li>
         </ul> <a href="#" class="cta-button">Flexibilização</a>
@@ -582,38 +598,98 @@
         <h2 class="section-title">Dados sobre Precarização</h2>
         <div class="charts-container">
             <div class="chart-card fade-in">
-                <h3>Crescimento do Trabalho Precário (1990-2023)</h3>
-                <div class="chart-placeholder">
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                </div>
-                <div class="chart-labels">
-                    <span>1990</span>
-                    <span>2000</span>
-                    <span>2010</span>
-                    <span>2020</span>
-                    <span>2023</span>
-                </div>
+                <h3>Taxa de informalidade (PNAD Contínua - IBGE)</h3>
+                <canvas id="chartInformalidade" height="300"></canvas>
+                <div class="chart-labels" id="labelsInformalidade"></div>
             </div>
             <div class="chart-card fade-in">
-                <h3>Impacto na Renda Média dos Trabalhadores</h3>
-                <div class="chart-placeholder">
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                    <div class="chart-bar"></div>
-                </div>
-                <div class="chart-labels">
-                    <span>CLT</span>
-                    <span>PJ</span>
-                    <span>Uber</span>
-                    <span>Inter.</span>
-                    <span>Bico</span>
-                </div>
+                <h3>Taxa de desocupação (PNAD Contínua - IBGE)</h3>
+                <canvas id="chartDesocupacao" height="300"></canvas>
+                <div class="chart-labels" id="labelsDesocupacao"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resumo Section -->
+    <section id="resumo" class="fade-in">
+        <h2 class="section-title">Resumo: Neoliberalismo, Informalidade e Desocupação</h2>
+        <div class="info-grid">
+            <div class="info-card fade-in">
+                <i class="fas fa-landmark"></i>
+                <h3>Neoliberalismo</h3>
+                <p>
+                    O neoliberalismo é um projeto político-econômico que enfatiza desregulação, privatizações, abertura
+                    comercial e a redução do papel do Estado na proteção social. Seus desdobramentos incluem a
+                    flexibilização de direitos, o enfraquecimento da negociação coletiva e a transferência de riscos ao
+                    trabalhador. No mercado de trabalho, isso tende a ampliar vínculos precários e informais, tornando
+                    essencial analisar informalidade e desocupação também à luz dessas escolhas de política econômica.
+                </p>
+            </div>
+            <!-- cartões existentes (Informalidade e Desocupação) continuam abaixo -->
+            <div class="info-card fade-in">
+                <i class="fas fa-briefcase"></i>
+                <h3>Informalidade</h3>
+                <p>
+                    A informalidade reúne trabalhadores sem carteira assinada, por conta própria sem CNPJ e ocupações
+                    sem proteção social. Em geral, cresce em períodos de crise e ajuste fiscal, quando empresas evitam
+                    custos trabalhistas e famílias buscam saídas imediatas de renda. Seus efeitos incluem renda mais
+                    instável, menor acesso a direitos (férias, 13º, previdência) e maior vulnerabilidade a choques
+                    econômicos, reforçando a precarização das relações de trabalho.
+                </p>
+            </div>
+            <div class="info-card fade-in">
+                <i class="fas fa-user-times"></i>
+                <h3>Desocupação</h3>
+                <p>
+                    A desocupação mede a parcela da força de trabalho que busca emprego e não encontra. Ela reage ao
+                    ciclo econômico, à política monetária e à estrutura produtiva. Quedas na desocupação nem sempre
+                    significam melhoria da qualidade do trabalho se parte das pessoas migrar para ocupações
+                    informais e de baixa remuneração. Por isso, analisar desocupação junto à informalidade ajuda a
+                    entender melhor a precarização no mercado de trabalho.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modelo Capitalista Section -->
+    <section id="modelo" class="fade-in">
+        <h2 class="section-title">Modelo capitalista de produção</h2>
+        <div class="info-grid">
+            <div class="info-card fade-in">
+                <i class="fas fa-cogs"></i>
+                <h3>Origens e fundamentos</h3>
+                <p>
+                    Baseia-se na propriedade privada dos meios de produção, no trabalho assalariado e na busca de lucro
+                    por meio da concorrência em mercados. A coordenação econômica ocorre via preços e contratos,
+                    priorizando eficiência e expansão do capital.
+                </p>
+            </div>
+            <div class="info-card fade-in">
+                <i class="fas fa-coins"></i>
+                <h3>Acumulação e mais-valia</h3>
+                <p>
+                    A acumulação decorre da extração de mais-valia: ampliar a produtividade, intensificar o ritmo de
+                    trabalho e reduzir custos (salariais e insumos). Em fases recentes, a financeirização reforça a
+                    pressão por rentabilidade de curto prazo.
+                </p>
+            </div>
+            <div class="info-card fade-in">
+                <i class="fas fa-industry"></i>
+                <h3>Transformações produtivas</h3>
+                <p>
+                    Do Taylorismo/Fordismo à produção enxuta (Toyotismo) e às cadeias globais: automação, just-in-time,
+                    terceirização e plataformas digitais. Ganhos de flexibilidade convivem com riscos e instabilidades
+                    transferidos ao trabalhador.
+                </p>
+            </div>
+            <div class="info-card fade-in">
+                <i class="fas fa-balance-scale"></i>
+                <h3>Efeitos e contradições</h3>
+                <p>
+                    Elevação de produtividade e consumo, mas também desigualdades, precarização e crises cíclicas.
+                    A mercantilização de esferas da vida e a concentração de renda alimentam tensões sociais e
+                    disputas por regulação e proteção social.
+                </p>
             </div>
         </div>
     </section>
@@ -636,6 +712,18 @@
                 <p class="quote-text">"O capitalismo contemporâneo transformou o trabalhador em seu próprio empresário,
                     sem os benefícios e com todos os riscos."</p>
                 <p class="quote-author">— Guy Standing</p>
+            </div>
+            <div class="quote-card fade-in">
+                <p class="quote-text">"O capitalismo organiza a produção a partir da extração de mais-valia, subordinando o trabalho à lógica da acumulação."</p>
+                <p class="quote-author">— Karl Marx</p>
+            </div>
+            <div class="quote-card fade-in">
+                <p class="quote-text">"O neoliberalismo estende a forma-mercado a esferas da vida social, corroendo a cidadania e a proteção coletiva."</p>
+                <p class="quote-author">— Wendy Brown</p>
+            </div>
+            <div class="quote-card fade-in">
+                <p class="quote-text">"A globalização produz expulsões e amplia zonas de informalidade, deslocando trabalhadores e fragilizando vínculos."</p>
+                <p class="quote-author">— Saskia Sassen</p>
             </div>
         </div>
     </section>
@@ -729,13 +817,282 @@
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const hero = document.querySelector('.hero');
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            // ajusta somente o fundo (pseudo-elemento) via CSS var para evitar deslocar o layout
+            if (hero) hero.style.setProperty('--parallax-y', `${Math.min(scrolled, 600) * 0.25}px`);
         });
+    </script>
+    <!-- Scripts: Chart.js + IBGE data integration -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        // Helper to create gradient for charts
+        function createGradient(ctx, color1, color2) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            return gradient;
+        }
+
+        // Runtime API base detection (prefers same origin, then localhost:3000)
+        let __apiBasePromise;
+        function timeoutFetch(url, options = {}, timeoutMs = 1200) {
+            const ac = new AbortController();
+            const id = setTimeout(() => ac.abort(), timeoutMs);
+            return fetch(url, { ...options, signal: ac.signal }).finally(() => clearTimeout(id));
+        }
+        async function getApiBase() {
+            if (__apiBasePromise) return __apiBasePromise;
+            __apiBasePromise = (async () => {
+                const sameOrigin = window.location.origin;
+                const samePort = window.location.port;
+                // Só testa mesma origem se estivermos nos ports típicos do backend
+                const candidates = (samePort === '3000' || samePort === '5173')
+                    ? [sameOrigin, 'http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173']
+                    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'];
+                for (const base of candidates) {
+                    try {
+                        const r = await timeoutFetch(`${base}/api/health`, {}, 1200);
+                        if (r.ok) return base;
+                    } catch {}
+                }
+                return null;
+            })();
+            return __apiBasePromise;
+        }
+        // Normalize accents/diacritics and lower-case
+        function normalizeStr(s) {
+            return (s || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        }
+        function getVarName(entry) {
+            // Try several fields commonly found in IBGE aggregate payloads
+            return entry?.nome || (typeof entry?.variavel === 'string' ? entry.variavel : entry?.variavel?.nome) || entry?.titulo || entry?.label || '';
+        }
+        function getVarId(entry) {
+            const v = entry?.variavel;
+            return (typeof v === 'object' && v?.id) ? String(v.id) : (entry?.id ? String(entry.id) : null);
+        }
+        function findVarByTerm(data, term) {
+            const t = normalizeStr(term);
+            const synonyms = t.includes('informal')
+                ? ['informalidade', 'informal', 'taxa de informalidade', 'emprego informal']
+                : ['desocupacao', 'desemprego', 'taxa de desocupacao'];
+            const candidates = data || [];
+            // First pass: match by name using synonyms
+            let found = candidates.find(v => {
+                const nm = normalizeStr(getVarName(v));
+                return synonyms.some(s => nm.includes(s));
+            });
+            if (found) return found;
+            // Second pass: match by known variable IDs (best-effort)
+            // 11255: Taxa de informalidade; 4099: Taxa de desocupação (ids may vary; this is a heuristic)
+            const desiredIds = t.includes('informal') ? ['11255'] : ['4099'];
+            found = candidates.find(v => desiredIds.includes(getVarId(v)));
+            if (found) return found;
+            // Third pass: relaxed contains using the raw term
+            found = candidates.find(v => normalizeStr(getVarName(v)).includes(t));
+            return found || null;
+        }
+
+        function extractSeriesFromEntry(entry) {
+            // Different payloads may appear: try to be tolerant
+            const resultados = entry.resultados || entry.resultado || [];
+            const br = resultados[0];
+            if (!br) return { labels: [], values: [] };
+            let serieObj = null;
+            if (br.serie && typeof br.serie === 'object') {
+                serieObj = br.serie;
+            } else if (Array.isArray(br.series) && br.series[0]?.serie) {
+                serieObj = br.series[0].serie;
+            } else if (br.series && typeof br.series === 'object') {
+                // Sometimes series is an object keyed by localidade
+                const firstKey = Object.keys(br.series)[0];
+                serieObj = firstKey ? (br.series[firstKey].serie || br.series[firstKey]) : null;
+            }
+            if (!serieObj) return { labels: [], values: [] };
+            const entries = Object.entries(serieObj)
+                .filter(([, v]) => v !== null && v !== undefined && v !== '-')
+                .map(([k, v]) => [k, parseFloat(String(v).replace(',', '.'))])
+                .filter(([, v]) => !Number.isNaN(v))
+                .sort((a, b) => a[0].localeCompare(b[0]));
+            const labels = entries.map(([k]) => k);
+            const values = entries.map(([, v]) => v);
+            // Limit to last 20 points for readability
+            const start = Math.max(0, labels.length - 20);
+            return { labels: labels.slice(start), values: values.slice(start) };
+        }
+
+        function renderLineChart(canvasId, labels, data, colors) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const gradient = createGradient(ctx, colors[0], colors[1]);
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: '%',
+                        data,
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: colors[0],
+                        tension: 0.3,
+                        pointRadius: 2,
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#b8b8b8' }, grid: { color: 'rgba(255,255,255,0.08)' } },
+                        y: { ticks: { color: '#b8b8b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.08)' } }
+                    }
+                }
+            });
+        }
+
+        // Fallback offline (amostra mínima) para o agregado 6397
+        const OFFLINE_IBGE_6397 = [
+            {
+                nome: 'Taxa de informalidade',
+                resultados: [
+                    { serie: { '2023-01': 40.3, '2023-02': 40.1, '2023-03': 39.8, '2023-04': 39.5, '2024-01': 39.3, '2024-02': 39.0, '2024-03': 38.8, '2024-04': 38.6 } }
+                ]
+            },
+            {
+                nome: 'Taxa de desocupacao',
+                resultados: [
+                    { serie: { '2023-01': 9.8, '2023-02': 9.2, '2023-03': 8.6, '2023-04': 8.0, '2024-01': 7.8, '2024-02': 7.6, '2024-03': 7.5, '2024-04': 7.4 } }
+                ]
+            }
+        ];
+
+        // Substitui a busca no IBGE por dados sintetizados via Gemini (backend)
+        async function fetchGeminiSeries(months = 18) {
+            const base = await getApiBase();
+            if (!base) {
+                console.warn('[IA] Backend não encontrado. Usando fallback offline.');
+                window.__DATA_SOURCE = 'offline';
+                return OFFLINE_IBGE_6397;
+            }
+            try {
+                const r = await timeoutFetch(`${base}/api/gemini-series`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ months })
+                }, 15000);
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                const series = await r.json();
+                window.__DATA_SOURCE = 'gemini';
+                console.log('[IA] Séries carregadas via Gemini:', series?.map?.(s => s?.nome));
+                return series;
+            } catch (e) {
+                console.warn('[IA] Falha ao obter séries via Gemini. Usando offline.', e);
+                window.__DATA_SOURCE = 'offline';
+                return OFFLINE_IBGE_6397;
+            }
+        }
+
+        (async () => {
+            try {
+                console.log('[IA] Iniciando carregamento via Gemini...');
+                const data = await fetchGeminiSeries(18);
+                console.log('[IA] Fonte de dados:', window.__DATA_SOURCE);
+                console.log('[IA] Amostra recebida:', Array.isArray(data) ? data.slice(0, 2) : data);
+                // Log de variáveis disponíveis
+                const availableVars = (data || []).map(d => ({ id: getVarId(d), nome: getVarName(d) }));
+                console.log('[IA] Séries disponíveis:', availableVars);
+                // Encontrar as duas séries
+                let varInformalidade = findVarByTerm(data, 'informalidade');
+                let varDesocupacao = findVarByTerm(data, 'desocupacao');
+                console.log('[IA] Encontrou variáveis:', {
+                    informalidade: !!varInformalidade,
+                    desocupacao: !!varDesocupacao,
+                    nomes:
+                        {
+                            informalidade: getVarName(varInformalidade),
+                            desocupacao: getVarName(varDesocupacao)
+                        }
+                });
+
+                if (varInformalidade) {
+                    const { labels, values } = extractSeriesFromEntry(varInformalidade);
+                    console.log('[IA] Informalidade: pontos=', labels.length, 'últimos=', labels.slice(-3), values.slice(-3));
+                    try {
+                        renderLineChart('chartInformalidade', labels, values, ['#f5576c', '#f093fb']);
+                    } catch (e) {
+                        console.error('[Chart] Erro ao renderizar chartInformalidade', e);
+                    }
+                    const lbl = document.getElementById('labelsInformalidade');
+                    if (labels.length) {
+                        lbl.textContent = window.__DATA_SOURCE === 'gemini' ? '' : 'Exibindo dados de amostra (offline).';
+
+                    } else {
+                        lbl.textContent = 'Sem dados disponíveis';
+                    }
+                    // Resumo IA
+                    try {
+                        const context = `Série: Taxa de informalidade (%). Últimos pontos: ${labels.map((l,i)=>`${l}: ${values[i]}%`).slice(-6).join(', ')}`;
+                        const prompt = 'Gere um resumo curto (2-4 frases) explicando a tendência recente e possíveis fatores sociais/econômicos.';
+                        const base = await getApiBase();
+                        if (base) {
+                            const gr = await fetch(`${base}/api/gemini`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, context }) });
+                            const gj = await gr.json();
+                            const aiBox = document.getElementById('labelsInformalidade');
+                            if (gj?.text) aiBox.innerHTML = (aiBox.textContent ? aiBox.textContent + '<br>' : '') + `<strong>Resumo IA:</strong> ${gj.text}`;
+                        }
+                    } catch (e) {
+                        console.warn('[Gemini] Falhou ao gerar resumo para informalidade', e);
+                    }
+                } else {
+                    document.getElementById('labelsInformalidade').textContent = 'Série "Taxa de informalidade" não encontrada.';
+                }
+
+                if (varDesocupacao) {
+                    const { labels, values } = extractSeriesFromEntry(varDesocupacao);
+                    console.log('[IA] Desocupação: pontos=', labels.length, 'últimos=', labels.slice(-3), values.slice(-3));
+                    try {
+                        renderLineChart('chartDesocupacao', labels, values, ['#667eea', '#764ba2']);
+                    } catch (e) {
+                        console.error('[Chart] Erro ao renderizar chartDesocupacao', e);
+                    }
+                    const lbl2 = document.getElementById('labelsDesocupacao');
+                    if (labels.length) {
+                        lbl2.textContent = window.__DATA_SOURCE === 'gemini' ? '' : 'Exibindo dados de amostra (offline).';
+                    } else {
+                        lbl2.textContent = 'Sem dados disponíveis';
+                    }
+                    // Resumo IA
+                    try {
+                        const context = `Série: Taxa de desocupação (%). Últimos pontos: ${labels.map((l,i)=>`${l}: ${values[i]}%`).slice(-6).join(', ')}`;
+                        const prompt = 'Resuma em 2-4 frases a tendência recente, apontando possíveis causas (ciclo econômico, mercado de trabalho, política pública).';
+                        const base = await getApiBase();
+                        if (base) {
+                            const gr = await fetch(`${base}/api/gemini`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, context }) });
+                            const gj = await gr.json();
+                            const aiBox = document.getElementById('labelsDesocupacao');
+                            if (gj?.text) aiBox.innerHTML = (aiBox.textContent ? aiBox.textContent + '<br>' : '') + `<strong>Resumo IA:</strong> ${gj.text}`;
+                        }
+                    } catch (e) {
+                        console.warn('[Gemini] Falhou ao gerar resumo para desocupação', e);
+                    }
+                } else {
+                    document.getElementById('labelsDesocupacao').textContent = 'Série "Taxa de desocupação" não encontrada.';
+                }
+            } catch (err) {
+                console.error('[IA] Falha geral ao carregar/plotar:', err);
+                const fallbackMsg = 'Falha ao carregar dados via Gemini.';
+                const el1 = document.getElementById('labelsInformalidade');
+                const el2 = document.getElementById('labelsDesocupacao');
+                if (el1) el1.textContent = fallbackMsg;
+                if (el2) el2.textContent = fallbackMsg;
+            }
+        })();
     </script>
 </body>
 
 
 </html>
-
 
 
