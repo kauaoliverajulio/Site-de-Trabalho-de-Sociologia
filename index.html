@@ -832,7 +832,7 @@
             return gradient;
         }
 
-        // Runtime API base detection (prefers same origin, then localhost:3000)
+        // Runtime API base detection (try same-origin first, then common local ports)
         let __apiBasePromise;
         function timeoutFetch(url, options = {}, timeoutMs = 1200) {
             const ac = new AbortController();
@@ -843,14 +843,12 @@
             if (__apiBasePromise) return __apiBasePromise;
             __apiBasePromise = (async () => {
                 const sameOrigin = window.location.origin;
-                const samePort = window.location.port;
-                // Só testa mesma origem se estivermos nos ports típicos do backend
-                const candidates = (samePort === '3000' || samePort === '5173')
-                    ? [sameOrigin, 'http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173']
-                    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'];
+                const candidates = [];
+                if (/^https?:\/\//.test(sameOrigin)) candidates.push(sameOrigin);
+                candidates.push('http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173');
                 for (const base of candidates) {
                     try {
-                        const r = await timeoutFetch(`${base}/api/health`, {}, 1200);
+                        const r = await timeoutFetch(`${base}/api/ping`, {}, 1200);
                         if (r.ok) return base;
                     } catch {}
                 }

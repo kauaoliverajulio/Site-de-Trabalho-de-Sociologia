@@ -87,6 +87,10 @@ app.use(express.static(publicDir));
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, uptime: process.uptime() });
 });
+// Add lightweight ping endpoint to avoid extension blocking
+app.get('/api/ping', (req, res) => {
+  res.json({ ok: true, uptime: process.uptime() });
+});
 
 // Diagnóstico do Gemini
 app.get('/api/gemini-status', async (req, res) => {
